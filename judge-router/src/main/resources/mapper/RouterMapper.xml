@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ltd.sgtu.judge.router.mapper.RouterMapper">
+    <resultMap id="RouterMap" type="ltd.sgtu.judge.router.entity.Router">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="key" column="key" jdbcType="VARCHAR"/>
+        <result property="path" column="path" jdbcType="VARCHAR"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="visible" column="visible" jdbcType="TINYINT" javaType="Boolean"/>
+        <result property="parent" column="parent" jdbcType="INTEGER"/>
+    </resultMap>
+    <select id="findAll" resultMap="RouterMap">
+        SELECT * FROM `router`
+    </select>
+    <select id="getById" resultMap="RouterMap">
+        SELECT * FROM `router` WHERE id = #{id}
+    </select>
+</mapper>
