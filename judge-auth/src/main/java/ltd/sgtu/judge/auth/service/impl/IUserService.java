@@ -32,4 +32,13 @@ public class IUserService implements UserService {
     public <T> User getById(T id) {
         return this.userMapper.getById(id);
     }
+
+    /**
+     * @param email
+     * @return
+     */
+    @Override
+    public User getByEmail(String email) {
+        return this.userMapper.getByEmail(email);
+    }
 }

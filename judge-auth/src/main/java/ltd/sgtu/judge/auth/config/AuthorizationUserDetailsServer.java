@@ -22,7 +22,7 @@ public class AuthorizationUserDetailsServer implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userService.getById(1);
+        User user = userService.getByEmail(username);
         UserDto userDto = new UserDto();
         userDto.setId(String.valueOf(user.getId()));
         userDto.setUsername(user.getEmail());
