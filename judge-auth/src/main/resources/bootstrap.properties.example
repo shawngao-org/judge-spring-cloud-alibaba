@@ -1,6 +1,6 @@
+spring.output.ansi.enabled=always
 spring.cloud.nacos.config.server-addr=10.4.61.203:8848
 spring.cloud.nacos.discovery.server-addr=10.4.61.203:8848
-
 # appName
 spring.application.name=judge-spring-cloud-alibaba-auth
 # Config Type: properties(Default Value) \ yaml \ yml
