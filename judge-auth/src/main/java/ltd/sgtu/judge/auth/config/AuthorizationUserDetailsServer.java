@@ -23,6 +23,9 @@ public class AuthorizationUserDetailsServer implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userService.getByEmail(username);
+        if (user == null) {
+            throw new UsernameNotFoundException("用户名或密码错误");
+        }
         UserDto userDto = new UserDto();
         userDto.setId(String.valueOf(user.getId()));
         userDto.setUsername(user.getEmail());
