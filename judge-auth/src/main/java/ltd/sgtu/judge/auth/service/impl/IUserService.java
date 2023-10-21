@@ -11,32 +11,23 @@ import java.util.List;
 @Service("userService")
 public class IUserService implements UserService {
 
-    @Autowired
     private UserMapper userMapper;
 
-    /**
-     * @return
-     */
+    @Autowired
+    public void setUserMapper(UserMapper userMapper) {
+        this.userMapper = userMapper;
+    }
+
     @Override
     public List<User> findAll() {
         return this.userMapper.findAll();
     }
 
-    /**
-     * *
-     * @param id
-     * @return
-     * @param <T>
-     */
     @Override
     public <T> User getById(T id) {
         return this.userMapper.getById(id);
     }
 
-    /**
-     * @param email
-     * @return
-     */
     @Override
     public User getByEmail(String email) {
         return this.userMapper.getByEmail(email);
