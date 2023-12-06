@@ -13,7 +13,6 @@
         <module>judge-auth</module>
         <module>judge-gateway</module>
         <module>judge-router</module>
-        <module>judge-test</module>
     </modules>
 
     <properties>
