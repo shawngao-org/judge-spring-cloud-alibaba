@@ -9,6 +9,7 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -33,10 +34,11 @@ import org.springframework.security.web.authentication.LoginUrlAuthenticationEnt
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 
 import javax.sql.DataSource;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
+import java.security.*;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.List;
 import java.util.UUID;
 
@@ -46,9 +48,11 @@ public class SecurityConfig {
 
     private final DataSource dataSource;
     private static final String CUSTOM_LOGIN_PAGE_URI = "/login";
+    private final RsaKeyConfig rsaKeyConfig;
 
-    public SecurityConfig(DataSource dataSource) {
+    public SecurityConfig(DataSource dataSource, RsaKeyConfig rsaKeyConfig) {
         this.dataSource = dataSource;
+        this.rsaKeyConfig = rsaKeyConfig;
     }
 
     @Bean
@@ -142,12 +146,19 @@ public class SecurityConfig {
         return new ImmutableJWKSet<>(jwkSet);
     }
 
-    private static KeyPair generateRsaKey() {
+    private KeyPair generateRsaKey() {
         KeyPair keyPair;
         try {
-            KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-            keyPairGenerator.initialize(2048);
-            keyPair = keyPairGenerator.generateKeyPair();
+            PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(
+                    Base64.decodeBase64(rsaKeyConfig.getPrivateKey())
+            );
+            X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(
+                    Base64.decodeBase64(rsaKeyConfig.getPublicKey())
+            );
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            PrivateKey privateKey = keyFactory.generatePrivate(pkcs8EncodedKeySpec);
+            PublicKey publicKey = keyFactory.generatePublic(x509EncodedKeySpec);
+            keyPair = new KeyPair(publicKey, privateKey);
         }
         catch (Exception ex) {
             throw new IllegalStateException(ex);
